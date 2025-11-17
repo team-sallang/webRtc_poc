@@ -1,0 +1,16 @@
+services:
+  # coturn TURN/STUN 서버
+  coturn:
+    image: coturn/coturn:latest
+    container_name: salang-coturn
+    environment:
+      TURN_USERNAME: ${TURN_USERNAME:-salang}
+      TURN_PASSWORD: ${TURN_PASSWORD:-salang123}
+      TURN_REALM: ${TURN_REALM:-salang.local}
+    ports:
+      - "3478:3478"    # TURN/STUN 포트 (TCP)
+      - "3478:3478/udp" # TURN/STUN 포트 (UDP)
+      - "49152-49200:49152-49200/udp" # TURN 릴레이 포트 범위
+    volumes:
+      - ./coturn.conf:/etc/coturn/turnserver.conf:ro
+    restart: unless-stopped
